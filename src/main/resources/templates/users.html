@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>List Users</title>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
+    <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div  class="navbar navbar-expand navbar-dark bg-dark" th:include="navbar :: navbar"></div> <!-- Agrega la barra de navegación utilizando th:replace -->
+
+    <div class="container">
+        <div>
+            <h1>Lista de Usuarios</h1>
+        </div>
+
+		<div>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Nombre</th>
+						<th>Apellidos</th>
+						<th>E-mail</th>
+						<th>Telefono</th>
+						<th>Usuario</th>
+						<th>Ubicaciones</th>
+						<th>Acciones</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="usuario: ${leerUsuarios}">
+						<td th:text="${usuario.nombre}">Nombre</td>
+						<td th:text="${usuario.apellidos}">Apellidos</td>
+						<td th:text="${usuario.email}">E-mail</td>
+						<td th:text="${usuario.telf}">Telefono</td>
+						<td th:text="${usuario.username}">Usuario</td>
+						<td><a th:href="@{/ubicacionesUsuario/{id_usuario}/lista(id_usuario=${usuario.id_usuario})}" class="btn btn-primary">Ver Ubicaciones</a></td>
+						<td>
+						<a th:href="@{/usuarios/{id}/editar(id=${usuario.id_usuario})}"
+							class="btn btn-primary">Editar</a>
+						<form th:action="@{/usuarios/{id}(id=${usuario.id_usuario})}"
+							method="post" style="display: inline-block;">
+							<input type="hidden" name="_method" value="delete" />
+							<button type="submit" class="btn btn-danger">Eliminar</button>
+						</form>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<a href="/getRegister" class="btn btn-primary">Nuevo Usuario</a>
+		</div>
+	</div>
+</body>
+</html>

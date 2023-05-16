@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Ubicaciones</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+	<div  class="navbar navbar-expand navbar-dark bg-dark" th:include="navbar :: navbar"></div>
+    <div class="container">
+        <h1>Lista de Ubicaciones</h1>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Tipo Ubicación</th>
+                    <th>País</th>
+                    <th>Provincia</th>
+                    <th>Municipio</th>
+                    <th>Dirección</th>
+                    <th>Código Postal</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="ubicacion : ${ubicaciones}">
+                    <td th:text="${ubicacion.getTipoUbicacion()}"></td>
+                    <td th:text="${ubicacion.getPais()}"></td>
+                    <td th:text="${ubicacion.getProvincia()}"></td>
+                    <td th:text="${ubicacion.getMunicipio()}"></td>
+                    <td th:text="${ubicacion.getDireccion()}"></td>
+                    <td th:text="${ubicacion.getCp()}"></td>
+                    <td>
+                        <a th:href="@{/ubicaciones/{id}/editar(id=${ubicacion.getIdubicacion()})}" class="btn btn-primary btn-sm">Editar</a>
+                        <a th:href="@{/ubicaciones/{id}/eliminar(id=${ubicacion.getIdubicacion()})}" class="btn btn-danger btn-sm">Eliminar</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <a th:href="@{/ubicaciones/nuevo}" class="btn btn-success">Agregar Ubicación</a>
+        <a th:href="@{/tipoUbicaciones}" class="btn btn-primary">Ver Tipos de Ubicacion</a>
+        <a th:href="@{/}" class="btn btn-danger">Salir</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Ubicaciones de usuarios</title>
+<link rel="stylesheet" type="text/css"
+	href="/webjars/bootstrap/css/bootstrap.min.css" />
+<script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+<script type="text/javascript"
+	src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div class="navbar navbar-expand navbar-dark bg-dark"
+		th:include="navbar :: navbar"></div>
+	<div class="container">
+		<div>
+			<h1>Lista de Reservas</h1>
+		</div>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Id Usuario</th>
+					<th>Id Ubicacion</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="uu : ${ubicacionesUsuario}">
+					<td th:text="${uu.id_usuario}"></td>
+					<td th:text="${uu.idubicacion}"></td>
+					<td><a th:href="@{/ubicacionesUsuario/{idubicacion}/eliminar(idubicacion=${uu.idubicacion})}"
+						class="btn btn-danger">Eliminar</a></td>
+				</tr>
+			</tbody>
+		</table>
+		<a
+			th:href="@{/ubicacionesUsuario/{id_usuario}/nuevaReserva(id_usuario=${ubicacionesUsuario.get(0).id_usuario})}"
+			class="btn btn-primary">Nueva Reserva</a> <a th:href="@{/lista}"
+			class="btn btn-danger">Volver</a>
+	</div>
+</body>
+</html>
+
+

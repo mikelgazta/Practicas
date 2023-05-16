@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Reserva</title>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
+    <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <form method="POST" action="/ubicacionesUsuario/guardar" id="formularioReserva">
+        <h2>Nueva Reserva</h2>
+        <input type="hidden" name="id_usuario" th:value="${id_usuario}" />
+        <div class="mb-3">
+            <label for="ubicacion">Ubicacion:</label>
+            <select class="form-select" id="idubicacion" name="idubicacion">
+                <option th:each="uu : ${ubicacionesUsuario}" th:value="${uu.idubicacion}" th:text="${uu.idubicacion}"></option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar Reserva</button>
+        <a th:href="@{/lista}" class="btn btn-danger">Volver</a>
+    </form>
+</body>
+</html>

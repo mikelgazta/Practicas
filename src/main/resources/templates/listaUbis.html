@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Lista de Tipos de Ubicaciones</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div  class="navbar navbar-expand navbar-dark bg-dark" th:include="navbar :: navbar"></div>
+	<div class="container">
+		<h1>Lista de Tipos de Ubicaciones</h1>
+		<div id="tabla-tipos">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Tipo de Ubicación</th>
+						<th>Rol</th>
+						<th>Descripción</th>
+						<th>Azalpena</th>
+						<th>Acciones</th>
+					</tr>
+				</thead>
+				<tbody th:replace="~{tabla-tipos :: tabla}"></tbody>
+			</table>
+		</div>
+			<button type="button" class="btn btn-success" id="modal-button">Agregar Tipo</button>
+			<a th:href="@{/ubicaciones}" class="btn btn-danger">Volver</a>
+	</div>
+
+	<!-- Modal de creacion -->
+	<div class="modal" tabindex="-1" role="dialog" id="modal-formulario">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Formulario de Ubicación</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form id="formulario">
+						<div class="form-group">
+							<label for="tipoUbicacion">Tipo de Ubicación</label> 
+							<input type="text" class="form-control" id="nuevoTipo"
+								name="tipo" required>
+						</div>
+						<div class="form-group">
+							<label for="rol">Rol</label> 
+							<select class="form-control" id="nuevoRol" name="rol">
+								<option value="RESIDENCIAL">Residencial</option>
+								<option value="TURISTICO">Turistico</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="descripcion">Descripción</label> 
+							<input type="text" class="form-control" id="nuevoDescripciones" name="descripciones" required>
+						</div>
+						<div class="form-group">
+							<label for="descripcion_eu">Azalpena</label> 
+							<input type="text" class="form-control" id="nuevoDescripcioneu" name="descripcioneu" required>
+						</div>
+						<button type="submit" class="btn btn-primary" id="guardar-tipo" name="guardar-tipo">Guardar</button>
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal">Cancelar</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Modal de edición -->
+	<div class="modal fade" id="modal-formulario-edicion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel">Editar tipo de ubicación</h4>
+	      </div>
+	      <div class="modal-body">
+	        <form id="formulario-edicion">
+	          <div class="form-group">
+	            <label for="tipo" class="control-label">Tipo de ubicación</label>
+				<input type="text" class="form-control" id="tipo" name="tipoUbiActualizada.tipo" required>
+	          </div>
+	          <div class="form-group">
+	            <label for="rol" class="control-label">Rol:</label>
+	            <input type="text" class="form-control" id="rol" name="tipoUbiActualizada.rol" required>
+	          </div>
+	          <div class="form-group">
+	            <label for="descripciones" class="control-label">Descripcion</label>
+	            <textarea class="form-control" id="descripciones" name="tipoUbiActualizada.descripciones" rows="3"></textarea>
+	          </div>
+	          <div class="form-group">
+	            <label for="descripcioneu" class="control-label">Azalpena</label>
+	            <textarea class="form-control" id="descripcioneu" name="tipoUbiActualizada.descripcioneu" rows="3"></textarea>
+	          </div>
+	        </form>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-primary" id="editar-tipo" name="editar-tipo">Guardar cambios</button>
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+<script>
+    function actualizarLista() {
+        $.ajax({
+            type: 'GET',
+            url: '/tipoUbicaciones/listar',
+            success: function(response){
+                $('#tabla-tipos tbody').html(response);
+            },
+            error: function(error){
+                console.log(error);
+            }
+        });
+    }
+    
+    function actualizarLinea(tipo, html) {
+        $('#tabla-tipos tbody tr').each(function() {
+            var $this = $(this);
+            var tipoFila = $this.find('td:first-child').text();
+            if (tipoFila === tipo) {
+                $this.html(html);
+                return false;
+            }
+        });
+    }
+
+    $(document).ready(function(){
+        var modal = $('#modal-formulario');
+        var form = $('#formulario');
+
+        $('#modal-button').click(function(){
+            form.trigger('reset');
+            modal.modal('show');
+        });
+
+        $('#guardar-tipo').click(function(){
+            $.ajax({
+                type: 'POST',
+                url: '/tipoUbicaciones/guardar',
+                data: form.serialize(),
+                dataType:'html',
+                success: function(response){
+                	actualizarLinea(tipo,'');
+                    actualizarLista();
+                    modal.modal('hide');
+                },
+                error: function(error){
+                    console.log(error);
+                }
+            });
+        });
+
+        $(document).on('click', '.editar-tipo', function(){
+            var tipo = $(this).data('tipo');
+
+            // Obtener los datos del tipo de ubicación y colocarlos en la modal de edición
+            $.ajax({
+                type: 'GET',
+                url: '/tipoUbicaciones/' + tipo + '/editar',
+                success: function(response){
+                    var tipoUbicacion = response.tipoUbicacion;
+// 					console.log(response.tipoUbicacion);
+
+                    // Colocar los datos del tipo de ubicación en los campos correspondientes de la modal de edición
+                    $('#tipo').val(tipoUbicacion.tipo);
+                    $('#rol').val(tipoUbicacion.rol);
+                    $('#descripciones').val(tipoUbicacion.descripciones);
+                    $('#descripcioneu').val(tipoUbicacion.descripcioneu);
+
+                    $('#modal-formulario-edicion').modal('show');
+                },
+                error: function(error){
+                    console.log(error);
+                }
+            });
+        });
+
+        // Enviar una solicitud POST al controlador para actualizar el tipo de ubicación
+        $(document).on('click', '#editar-tipo', function(){
+            var tipo = $('#tipo').val();
+            var rol = $('#rol').val();
+            var descripciones = $('#descripciones').val();
+            var descripcioneu = $('#descripcioneu').val();
+
+//             console.log(tipo);
+//             console.log(rol);
+//             console.log(descripciones);
+//             console.log(descripcioneu);
+            
+            $.ajax({
+                type: 'POST',
+                url: '/tipoUbicaciones/' + tipo + '/editar',
+                data: {
+                    tipo: tipo,
+                    rol: rol,
+                    descripciones: descripciones,
+                    descripcioneu: descripcioneu
+                },
+                success: function(response){
+                    if(response.success){
+                        // Obtener la fila que se va a actualizar
+                        var fila = $('#tabla-tipos tbody tr:contains('+tipo+')');
+                        
+                        // Actualizar los datos en las celdas correspondientes
+						fila.find('td:eq(1)').text(rol);
+						fila.find('td:eq(2)').text(descripciones);
+						fila.find('td:eq(3)').text(descripcioneu);
+                        
+                        // Ocultar el modal
+                        $('#modal-formulario-edicion').modal('hide');
+                    } else {
+                        console.log("Error al actualizar los datos");
+                    }
+                },
+                error: function(error){
+                    console.log(error);
+                }
+            });
+        });
+
+        $(document).on('click', '.eliminar-tipo', function(){
+            var tipo = $(this).data('tipo');
+            $.ajax({
+                type: 'GET',
+                url: '/tipoUbicaciones/' + tipo + '/eliminar',
+                success: function(response){
+					actualizarLinea(tipo,'');
+                },
+                error: function(error){
+                    console.log(error);
+                }
+            });
+        });
+    });
+</script>
+
+
+
+
+</body>
+</html>

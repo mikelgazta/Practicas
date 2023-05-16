@@ -1,0 +1,19 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<table>
+<!-- <!-- Hay que añadirle el th:fragment para especificar que fragmento es 
+el que quieres importar a la pagina principal. -->
+    <tbody th:fragment="tabla">
+        <tr th:each="tipoubicacion : ${tipoUbicacion}">
+            <td th:text="${tipoubicacion.tipo}"></td>
+            <td th:text="${tipoubicacion.rol}"></td>
+            <td th:text="${tipoubicacion.descripciones}"></td>
+            <td th:text="${tipoubicacion.descripcioneu}"></td>
+            <td>
+                <button type="button" class='btn btn-primary btn-sm editar-tipo'
+                    th:attr="data-tipo=${tipoubicacion.getTipo()}">Editar</button>
+                <button type='button' class='btn btn-danger btn-sm eliminar-tipo'
+                    th:attr="data-tipo=${tipoubicacion.getTipo()}">Eliminar</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
